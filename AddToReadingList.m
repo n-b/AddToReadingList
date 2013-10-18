@@ -19,6 +19,9 @@
 {
     IBOutlet UILabel *_explanationLabel;
     IBOutlet UILabel *_iconLabel;
+    
+    NSInteger _lastChangeCount;
+    NSTimer * _pasteboardCheckTimer;
 }
 
 -(void)awakeFromNib
@@ -27,11 +30,22 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidOpen)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
+    _pasteboardCheckTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(checkPasteboard) userInfo:nil repeats:YES];
+    _pasteboardCheckTimer.tolerance = 10;
+    [[NSRunLoop mainRunLoop] addTimer:_pasteboardCheckTimer forMode:NSRunLoopCommonModes];
+    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
 }
 
 - (void) appDidOpen
 {
     [self findAndAddURLs];
+}
+
+- (void) checkPasteboard
+{
+    if([UIPasteboard generalPasteboard].changeCount != _lastChangeCount) {
+        [self findAndAddURLs];
+    }
 }
 
 - (void) findAndAddURLs
@@ -40,32 +54,34 @@
     NSMutableOrderedSet * foundUrls = [NSMutableOrderedSet new];
     NSMutableDictionary * urlTitles = [NSMutableDictionary new];
     
-    for (NSDictionary * item in UIPasteboard.generalPasteboard.items) {
-        NSURL* url;
-        for (NSString * urlType in UIPasteboardTypeListURL) {
-            url = item[urlType];
-            if (url) {
-                break;
+    if (([UIPasteboard generalPasteboard].changeCount != _lastChangeCount)) {
+        for (NSDictionary * item in [UIPasteboard generalPasteboard].items) {
+            NSURL* url;
+            for (NSString * urlType in UIPasteboardTypeListURL) {
+                url = item[urlType];
+                if (url) {
+                    break;
+                }
             }
-        }
-        NSString * string;
-        for (NSString * stringType in UIPasteboardTypeListString) {
-            string = item[stringType];
-            if (string) {
-                break;
+            NSString * string;
+            for (NSString * stringType in UIPasteboardTypeListString) {
+                string = item[stringType];
+                if (string) {
+                    break;
+                }
             }
-        }
-        if(url) {
-            [foundUrls addObject:url];
-            if(string && ![string isEqualToString:[url absoluteString]]) {
-                urlTitles[url] = string;
-            }
-        } else if(string) {
-            NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
-            NSArray *matches = [linkDetector matchesInString:string options:0 range:NSMakeRange(0, string.length)];
-            for (NSTextCheckingResult *match in matches) {
-                if (match.resultType == NSTextCheckingTypeLink) {
-                    [foundUrls addObject:match.URL];
+            if(url) {
+                [foundUrls addObject:url];
+                if(string && ![string isEqualToString:[url absoluteString]]) {
+                    urlTitles[url] = string;
+                }
+            } else if(string) {
+                NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+                NSArray *matches = [linkDetector matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+                for (NSTextCheckingResult *match in matches) {
+                    if (match.resultType == NSTextCheckingTypeLink) {
+                        [foundUrls addObject:match.URL];
+                    }
                 }
             }
         }
@@ -100,18 +116,30 @@
         }
     }
     
-    if([addedURLs count]>1) {
-        _explanationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"SEVERAL_URL_ADDED_TO_READING_LIST_%@", nil),
-                                  [[addedURLs valueForKey:@"absoluteString"] componentsSeparatedByString:@"\n"]];
-        _iconLabel.text = @"😀";
-    } else if([addedURLs count]==1){
-        _explanationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"ONE_URL_ADDED_TO_READING_LIST_%@", nil),
-                                  [[addedURLs firstObject] absoluteString]];
+    // Display result
+    if ([addedURLs count]) {
+        if([addedURLs count]>1) {
+            _explanationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"SEVERAL_URL_ADDED_TO_READING_LIST_%@", nil),
+                                      [[addedURLs valueForKey:@"absoluteString"] componentsSeparatedByString:@"\n"]];
+        } else if([addedURLs count]==1){
+            _explanationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"ONE_URL_ADDED_TO_READING_LIST_%@", nil),
+                                      [[addedURLs firstObject] absoluteString]];
+        }
+
+        if([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+            UILocalNotification * localNotif = [UILocalNotification new];
+            localNotif.alertBody = NSLocalizedString(@"ADDED_TO_READING_LIST", nil);
+            localNotif.hasAction = NO;
+            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+            [[UIApplication sharedApplication] performSelector:@selector(cancelLocalNotification:) withObject:localNotif afterDelay:5];
+        }
         _iconLabel.text = @"😃";
     } else {
         _explanationLabel.text = NSLocalizedString(@"NO_URL_FOUND_HOW_TO_USE", nil);
         _iconLabel.text = @"😟";
     }
+    
+    _lastChangeCount = [UIPasteboard generalPasteboard].changeCount;
 }
 
 @end
