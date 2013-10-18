@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  AddToReadingList
+
+  Created by Nicolas on 18/10/2013.
+  Copyright (c) 2013 Nicolas Bouilleaud. All rights reserved.
+*/
+
+"NO_URL_FOUND_HOW_TO_USE" = "Copy URLs, then launch this app to add them to the Safari Reading List.\n(No URLs found in pasteboard)";
+"ONE_URL_ADDED_TO_READING_LIST_%@" = "The address “%@” was added to the reading list.";
+"SEVERAL_URL_ADDED_TO_READING_LIST_%@" = "The following addresses were added to the reading list:\n%@";
+"UNSUPPORTED_URL" = "Unsupported URL";

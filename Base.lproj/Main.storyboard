@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4511" systemVersion="13A598" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3745"/>
+    </dependencies>
+    <scenes>
+        <!--ARLVC-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="ARLVC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NRP-tA-H0z"/>
+                        <viewControllerLayoutGuide type="bottom" id="LfF-ps-KuH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="ZKl-H1-SrW">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="OzR-fg-gTl" userLabel="Details">
+                                <rect key="frame" x="20" y="130" width="280" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✅" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EpB-i2-ETK" userLabel="✅">
+                                <rect key="frame" x="20" y="158" width="280" height="108"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="90"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="OzR-fg-gTl" secondAttribute="trailing" constant="20" id="3hq-fR-xjo"/>
+                            <constraint firstItem="EpB-i2-ETK" firstAttribute="top" secondItem="OzR-fg-gTl" secondAttribute="bottom" constant="8" symbolic="YES" id="8gs-VF-YJc"/>
+                            <constraint firstItem="EpB-i2-ETK" firstAttribute="leading" secondItem="OzR-fg-gTl" secondAttribute="leading" id="9nw-Jt-lNL"/>
+                            <constraint firstItem="OzR-fg-gTl" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="F2u-Hw-8AJ"/>
+                            <constraint firstAttribute="centerX" secondItem="OzR-fg-gTl" secondAttribute="centerX" id="LRR-Zr-99P"/>
+                            <constraint firstItem="EpB-i2-ETK" firstAttribute="trailing" secondItem="OzR-fg-gTl" secondAttribute="trailing" id="cnb-5h-VTp"/>
+                            <constraint firstItem="EpB-i2-ETK" firstAttribute="width" secondItem="OzR-fg-gTl" secondAttribute="width" id="kE6-FB-gkE"/>
+                            <constraint firstItem="OzR-fg-gTl" firstAttribute="top" secondItem="NRP-tA-H0z" secondAttribute="bottom" priority="863" constant="110" id="r31-Pc-WuF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="_explanationLabel" destination="OzR-fg-gTl" id="Ud1-e1-TNW"/>
+                        <outlet property="_iconLabel" destination="EpB-i2-ETK" id="2AH-we-XVc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="LaunchImage" width="16" height="16"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
