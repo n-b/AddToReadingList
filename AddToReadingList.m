@@ -33,7 +33,17 @@
     _pasteboardCheckTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(checkPasteboard) userInfo:nil repeats:YES];
     _pasteboardCheckTimer.tolerance = 10;
     [[NSRunLoop mainRunLoop] addTimer:_pasteboardCheckTimer forMode:NSRunLoopCommonModes];
-    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        UILocalNotification * localNotif = [UILocalNotification new];
+        localNotif.alertBody = NSLocalizedString(@"ADD_TO_LIST_SESSION_ENDED", nil);
+        localNotif.hasAction = NO;
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+            exit(0);
+        });
+    }];
 }
 
 - (void) appDidOpen
@@ -131,7 +141,10 @@
             localNotif.alertBody = NSLocalizedString(@"ADDED_TO_READING_LIST", nil);
             localNotif.hasAction = NO;
             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
-            [[UIApplication sharedApplication] performSelector:@selector(cancelLocalNotification:) withObject:localNotif afterDelay:5];
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [[UIApplication sharedApplication] cancelLocalNotification:localNotif];
+            });
         }
         _iconLabel.text = @"😃";
     } else {

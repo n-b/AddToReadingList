@@ -11,3 +11,4 @@
 "SEVERAL_URL_ADDED_TO_READING_LIST_%@" = "The following addresses were added to the reading list:\n%@";
 "ADDED_TO_READING_LIST" = "Added to reading list";
 "UNSUPPORTED_URL" = "Unsupported URL";
+"ADD_TO_LIST_SESSION_ENDED" = "Adding session terminated";
